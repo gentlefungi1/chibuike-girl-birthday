@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <!--
+    viewport-fit=cover: extends Safari into the Dynamic Island / notch.
+    CSS then uses env(safe-area-inset-*) to push content back to safe zone.
+  -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#ff6b9d" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <!-- black-translucent: gradient bleeds behind the status bar beautifully -->
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Happy Birthday 🎂" />
+  <!-- Stop iOS auto-linking phone numbers / dates inside the letter text -->
+  <meta name="format-detection" content="telephone=no, date=no, address=no" />
+  <title>Happy Birthday Endurance 🎂</title>
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,700&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- ░░ BACKGROUND MUSIC ░░
+       Drop your mp3 into assets/ and uncomment both the <audio> tag
+       and the startMusic() call inside the 'reveal' view hook in app.js
+  -->
+  <!-- <audio id="bgMusic">
+    <source src="assets/Chris Brown - With You.mp3" type="audio/mpeg" />
+  </audio> -->
+
+  <!-- ░░ PARTICLES LAYER ░░ -->
+  <canvas id="particles" aria-hidden="true"></canvas>
+
+  <!-- ░░ PAGE TRANSITION OVERLAY ░░ -->
+  <div id="overlay" aria-hidden="true"></div>
+
+  <!-- ░░ LIGHTBOX ░░ -->
+  <div id="lightbox" aria-modal="true" role="dialog" aria-label="Photo lightbox">
+    <button id="lightbox-close" aria-label="Close lightbox">✕</button>
+    <button id="lightbox-prev"  aria-label="Previous photo">‹</button>
+    <button id="lightbox-next"  aria-label="Next photo">›</button>
+    <img id="lightbox-img" src="" alt="" />
+    <p id="lightbox-caption"></p>
+    <p id="lightbox-counter"></p>
+  </div>
+
+  <!-- ░░ PROGRESS NAV ░░ -->
+  <nav id="progress-nav" aria-label="Journey progress">
+    <button data-view="countdown" aria-label="Countdown">⏱</button>
+    <button data-view="reveal"    aria-label="Reveal">🎉</button>
+    <button data-view="memories"  aria-label="Memories">💖</button>
+    <button data-view="gallery"   aria-label="Gallery">📸</button>
+    <button data-view="letter"    aria-label="Letter">💌</button>
+  </nav>
+
+  <!-- ════════════════════════════════════════
+       VIEW 1 — COUNTDOWN
+  ════════════════════════════════════════ -->
+  <section id="view-countdown" class="view active" role="main">
+    <div class="glass-card card-center">
+      <p class="eyebrow">something special is coming</p>
+      <h1 class="display-title">
+        <span role="img" aria-label="cake">🎂</span> Endurance's<br/>Special Day
+      </h1>
+      <p class="subtitle">Every second brings us closer to something beautiful ✨</p>
+
+      <div class="countdown-grid" aria-live="polite" aria-label="Countdown timer">
+        <div class="clock-block glass-card">
+          <span id="days"    class="clock-num">00</span>
+          <span class="clock-label">days</span>
+        </div>
+        <div class="clock-block glass-card">
+          <span id="hours"   class="clock-num">00</span>
+          <span class="clock-label">hours</span>
+        </div>
+        <div class="clock-block glass-card">
+          <span id="minutes" class="clock-num">00</span>
+          <span class="clock-label">minutes</span>
+        </div>
+        <div class="clock-block glass-card pulse">
+          <span id="seconds" class="clock-num">00</span>
+          <span class="clock-label">seconds</span>
+        </div>
+      </div>
+
+      <div id="enter-wrap" class="hidden" style="margin-top:2.5rem;">
+        <button class="main-btn" onclick="App.go('reveal')">
+          🎉 Open Your Birthday Surprise
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ════════════════════════════════════════
+       VIEW 2 — REVEAL
+  ════════════════════════════════════════ -->
+  <section id="view-reveal" class="view">
+    <div class="glass-card card-center">
+      <p class="eyebrow">today is the day</p>
+      <h1 class="display-title hero-name">
+        Happy Birthday,<br/>To The Love Of My Life <span role="img" aria-label="heart">❤️</span>
+      </h1>
+      <p class="subtitle" style="max-width:520px; margin:0 auto 2rem;">
+        You deserve every good thing this world has to offer.
+        Today is entirely, beautifully yours.
+      </p>
+      <button class="main-btn" onclick="App.go('memories')">
+        Open Your Surprise ✨
+      </button>
+    </div>
+  </section>
+
+  <!-- ════════════════════════════════════════
+       VIEW 3 — MEMORY CARDS
+  ════════════════════════════════════════ -->
+  <section id="view-memories" class="view scrollable-view">
+    <div class="view-inner">
+      <p class="eyebrow" style="text-align:center;">a few things worth saying</p>
+      <h2 class="section-title" style="text-align:center;">Beautiful Things About You ✨</h2>
+
+      <div class="cards-grid">
+        <div class="memory-card glass-card stagger-1">
+          <span class="card-emoji" role="img" aria-label="heart">💖</span>
+          <h3 class="card-heading">Your Smile</h3>
+          <p class="card-body">Your smile isn't just something I see, it's something I feel. It has this quiet way of softening everything around it, like the world pauses for a second just to admire it. It's honest, rare, and effortlessly beautiful, the kind of smile that makes someone remember you even in your absence. ❤️</p>
+        </div>
+        <div class="memory-card glass-card stagger-2">
+          <span class="card-emoji" role="img" aria-label="blossom">🌸</span>
+          <h3 class="card-heading">Your Heart</h3>
+          <p class="card-body">You have a heart that loves deeply and cares sincerely, and that's rare. In a world where people pretend so much, you remain genuine, kind, and effortlessly beautiful from the inside out.</p>
+        </div>
+        <div class="memory-card glass-card stagger-3">
+          <span class="card-emoji" role="img" aria-label="sparkles">✨</span>
+          <h3 class="card-heading">Your Future</h3>
+          <p class="card-body">There's something about you that makes me certain your future will be amazing. You deserve a life filled with happiness, success, peace, and the kind of love that never makes you question your worth.</p>
+        </div>
+        <div class="memory-card glass-card stagger-4">
+          <span class="card-emoji" role="img" aria-label="muscle">💪</span>
+          <h3 class="card-heading">Your Strength</h3>
+          <p class="card-body">You are stronger than you think. Even when life tests you, you still find a way to rise, to smile, and to keep moving forward. That strength in you is quietly inspiring.</p>
+        </div>
+        <div class="memory-card glass-card stagger-5">
+          <span class="card-emoji" role="img" aria-label="laughing">🤣</span>
+          <h3 class="card-heading">Your Humour</h3>
+          <p class="card-body">One thing about you? You make life feel easy. Your humour, your playful energy, and the way you make me laugh create moments I never want to forget.</p>
+        </div>
+        <div class="memory-card glass-card stagger-6">
+          <span class="card-emoji" role="img" aria-label="cake">🎂</span>
+          <h3 class="card-heading">Simply You</h3>
+          <p class="card-body">And beyond all these things, simply you. The way you exist, love, smile, think, and care makes you unforgettable. There's nobody else like you, Agbo. ❤️</p>
+        </div>
+      </div>
+
+      <div style="text-align:center; margin-top:3rem; padding-bottom:1rem;">
+        <button class="main-btn" onclick="App.go('gallery')">
+          Continue the Journey 📸
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ════════════════════════════════════════
+       VIEW 4 — PHOTO GALLERY
+  ════════════════════════════════════════ -->
+  <section id="view-gallery" class="view scrollable-view">
+    <div class="view-inner">
+      <p class="eyebrow" style="text-align:center;">a walk down memory lane</p>
+      <h2 class="section-title" style="text-align:center;">
+        Few Of My Favourite Photos Of You <span role="img" aria-label="camera">📸</span>
+      </h2>
+
+      <div class="gallery-grid" id="gallery-grid">
+        <div class="polaroid glass-card stagger-1" data-index="0">
+          <img src="./birthday pics/IMG-20260113-WA0033.jpg"      alt="Most beautiful girl in the world" loading="lazy" />
+          <p class="polaroid-caption">Most beautiful girl in the world 🥰</p>
+        </div>
+        <div class="polaroid glass-card stagger-2" data-index="1">
+          <img src="./birthday pics/IMG-20251225-WA0008~2.jpg"    alt="Smiles that last forever" loading="lazy" />
+          <p class="polaroid-caption">Smiles that last forever ✨</p>
+        </div>
+        <div class="polaroid glass-card stagger-3" data-index="2">
+          <img src="./birthday pics/IMG-20250411-WA0018.jpg"      alt="Lol, what were you looking at?" loading="lazy" />
+          <p class="polaroid-caption">Lol, what were you looking at? 🤣</p>
+        </div>
+        <div class="polaroid glass-card stagger-4" data-index="3">
+          <img src="./birthday pics/IMG-20251210-WA0012.jpg"      alt="Still my favourite picture" loading="lazy" />
+          <p class="polaroid-caption">Still my favourite picture 🌹</p>
+        </div>
+        <div class="polaroid glass-card stagger-5" data-index="4">
+          <img src="./birthday pics/IMG-20260410-WA0002~2-2.jpg"  alt="I have this as your contact photo" loading="lazy" />
+          <p class="polaroid-caption">I have this as your contact photo ❤️</p>
+        </div>
+        <div class="polaroid glass-card stagger-6" data-index="5">
+          <img src="./birthday pics/IMG-20260522-WA0003~2.jpg"    alt="Just do your thing babe" loading="lazy" />
+          <p class="polaroid-caption">Just do your thing babe, there's nobody hotter 😘</p>
+        </div>
+        <div class="polaroid glass-card stagger-7" data-index="6">
+          <img src="./birthday pics/IMG-20260124-WA0047.jpg"      alt="Soft heart, strong mind, beautiful soul" loading="lazy" />
+          <p class="polaroid-caption">Soft heart, strong mind, beautiful soul 👸🏽</p>
+        </div>
+        <div class="polaroid glass-card stagger-8" data-index="7">
+          <img src="./birthday pics/IMG-20250216-WA0014.jpg"      alt="Had to throw this one in" loading="lazy" />
+          <p class="polaroid-caption">Lol, you know i had to throw this one in here 😜</p>
+        </div>
+      </div>
+
+      <div style="text-align:center; margin-top:3.5rem; padding-bottom:1rem;">
+        <button class="main-btn" onclick="App.go('letter')">
+          One Last Thing 💌
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ════════════════════════════════════════
+       VIEW 5 — FINAL LETTER
+  ════════════════════════════════════════ -->
+  <section id="view-letter" class="view">
+    <div class="glass-card letter-card">
+      <p class="eyebrow">from me, to you</p>
+      <h2 class="section-title">A Little Note <span role="img" aria-label="love letter">💌</span></h2>
+
+      <div class="letter-body">
+        <p>I want this to be simple and honest, from me to you.</p>
+        <p>
+          Out of everyone I've ever met, you're the one who stands out
+          in a way I can't ignore or replace. You're my one and only,
+          not just because of how you look, but because of how you make
+          me feel when I talk to you, think about you, or even just
+          see you happy.
+        </p>
+        <p>I choose you, genuinely and consistently. And I don't say that lightly.</p>
+        <p>
+          You mean so much to me, and I hope today reminds you
+          just how special you are, not just to the world,
+          but to me especially. ❤️🎂
+        </p>
+        <p>Happy Birthday My Love ❤️</p>
+      </div>
+
+      <p class="letter-sign">with love, always<br/>Kelvin ❤️</p>
+
+      <div class="btn-row">
+        <button class="main-btn ghost-btn" id="musicToggle" onclick="App.toggleMusic()">
+          ▶ Play Music
+        </button>
+        <button class="main-btn ghost-btn" onclick="App.celebrate()">
+          🎊 Celebrate Again!
+        </button>
+        <button class="main-btn ghost-btn" onclick="App.go('countdown')">
+          🔄 Start Over
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <script src="app.js"></script>
+</body>
+</html>
