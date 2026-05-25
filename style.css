@@ -45,6 +45,7 @@ body {
   min-height: 100vh;
   min-height: 100dvh;
   overflow-x: hidden;
+  margin-top: 100px;
   margin-bottom: 200px;
 }
 
@@ -621,6 +622,7 @@ body {
   width: 100%;
   padding: 3rem;
   text-align: center;
+  margin-top: 250px;
 }
 
 .letter-body {

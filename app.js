@@ -16,10 +16,10 @@
 // CONFIG
 // ─────────────────────────────────────────
 const CONFIG = {
-  name:       'Endurance',
-  birthYear:  2002,
-  birthMonth: 7,   // 1-indexed
-  birthDay:   15,
+  name:       'Marsha',
+  birthYear:  1990,
+  birthMonth: 5,   // 1-indexed
+  birthDay:   29,
 };
 
 const VIEW_ORDER = ['countdown', 'reveal', 'memories', 'gallery', 'letter'];
