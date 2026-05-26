@@ -257,16 +257,16 @@ function initCountdown() {
   const enterWrap = document.getElementById('enter-wrap');
 
   
-  function isBirthdayToday() {
-    return true; // force birthday mode for testing
-  }
-
   // function isBirthdayToday() {
-  //   const now = new Date();
-  //   return now.getMonth() === CONFIG.birthMonth - 1 &&
-  //          now.getDate()  === CONFIG.birthDay;
-  //   // ── TESTING: comment the two lines above and use: return true;
+  //   return true; // force birthday mode for testing
   // }
+
+  function isBirthdayToday() {
+    const now = new Date();
+    return now.getMonth() === CONFIG.birthMonth - 1 &&
+           now.getDate()  === CONFIG.birthDay;
+    // ── TESTING: comment the two lines above and use: return true;
+  }
 
   function getTarget() {
     const now      = new Date();
